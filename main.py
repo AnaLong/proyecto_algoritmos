@@ -1,7 +1,7 @@
 def main():
 
     print("Los siguientes son los métodos de búsqueda de obras disponibles:\n" \
-            "1- Búsqueda por departamento\n" \
+            "\n1- Búsqueda por departamento\n" \
             "2- Búsqueda por Nacionalidad del artista\n" \
             "3- Búsqueda por Nombre del Artista\n")
     busqueda=input("Ingrese el número asociado al método de búsqueda que desea utilizar: ")
