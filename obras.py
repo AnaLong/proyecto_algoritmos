@@ -1,6 +1,6 @@
 def obras_fun():
     import requests
-    id_req= input("Ingrese el ID de la obra en la que esta interesado: ")
+    id_req= input("\nIngrese el ID de la obra en la que esta interesado: ")
     api="https://collectionapi.metmuseum.org/public/collection/v1/objects/" + id_req
     obj=requests.get(api)
     obj=obj.json()
@@ -16,7 +16,7 @@ def obras_fun():
                 self.creacion=obj["objectDate"]
 
             def __str__(self):
-                return (f"Título de la Obra: {self.titulo}\n"
+                return (f"\nTítulo de la Obra: {self.titulo}\n"
                         f"Nombre del Artista: {self.artista}\n"
                         f"Nacionalidad del Artista: {self.nacionalidad}\n"
                         f"Fecha de nacimiento del Artista: {self.nacimiento}\n"

@@ -15,10 +15,10 @@ def departamentos_fun():
                 for i in range(len(self.id)):
                     print(str(self.id[i]) + "- " + self.nombre[i])
                 return ""
-            def opioide(obras):
+            def auxiliar(obras):
                 total=obras["total"]
-                limite=int(input("\nEscriba el número de obras que desea visualizar: "))
-                print(f"\nEl total de obras es {total}, se muestran las primeras {limite}\n")
+                limite=int(input(f"\nEl total de obras es {total}. Escriba el número de obras que desea visualizar: "))
+                print(f"\nSe muestran las primeras {limite} obras\n")
                 i=0
                 if i<limite:
                      for i in range(limite):
@@ -33,8 +33,7 @@ def departamentos_fun():
     api= "https://collectionapi.metmuseum.org/public/collection/v1/search?departmentId=" + dep_req + "&q=%22%22"
     obras=requests.get(api)
     obras=obras.json()
-    dep_req=Departamento.opioide(obras)
-    #)
+    dep_req=Departamento.auxiliar(obras)
 
 
     # next=input(f"\nPara ver las siguientes {limite}, ingrese 1, si no, ingrese cualquier cosa: ")
