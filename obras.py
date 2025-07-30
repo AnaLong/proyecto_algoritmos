@@ -5,15 +5,20 @@ def obras_fun():
     obj=requests.get(api)
     obj=obj.json()
 
+    def limpiar(valor):
+        if valor is None or str(valor).strip() == "":
+            return "Desconocido"
+        return valor
+
     class Obra:
             def __init__(self,obj):
-                self.titulo=obj["title"]
-                self.artista=obj["artistDisplayName"]
-                self.nacionalidad=obj["artistNationality"]
-                self.nacimiento=obj["artistBeginDate"]
-                self.muerte=obj["artistEndDate"]
-                self.tipo=obj["classification"]
-                self.creacion=obj["objectDate"]
+                self.titulo=limpiar(obj.get("title"))
+                self.artista=limpiar(obj.get("artistDisplayName"))
+                self.nacionalidad=limpiar(obj.get("artistNationality"))
+                self.nacimiento=limpiar(obj.get("artistBeginDate"))
+                self.muerte=limpiar(obj.get("artistEndDate"))
+                self.tipo=limpiar(obj.get("classification"))
+                self.creacion=limpiar(obj.get("objectDate"))
 
             def __str__(self):
                 return (f"\nTítulo de la Obra: {self.titulo}\n"
@@ -29,3 +34,6 @@ def obras_fun():
 
 
     #Hay info que algunas obras no tiene, ver como poner que si esta vacio diga "Desconocido"
+
+    #Aqui Rojo, agregue el metodo limpiar, que lo que hace es agarrar y poner "desconocido" si la informacion esta en None o si esta en blanco. 
+    #El strip lo que hace es eliminar los espacios en blanco que hayan de mas en los strings. 
