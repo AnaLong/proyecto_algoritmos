@@ -18,19 +18,24 @@ class Obra:
     El método show_resumen muestra al usuario la información primordial de la obra al buscar un departamento, nacionalidad o artista específico.
     El método show_detalles muestra al usuario información más detallada de la obra al indicar un id a una obra específica.
     """
-    def __init__(self,id,titulo,autor,nacionalidad,fecha_nacimiento,fecha_muerte,tipo,anio_creacion,imagen):
+    def __init__(self,id,titulo,autor):
         self.id=id
         self.titulo=titulo
         self.autor=autor
+
+    def show_resumen(self):
+        print(f"    Id: {self.id} - Título: {self.titulo} (Artista: {self.autor})")
+
+
+class ObraDetallada:
+    def __init__(self,id,titulo,autor,nacionalidad,fecha_nacimiento,fecha_muerte,tipo,anio_creacion,imagen):
+        super().__init__(id,titulo,autor)
         self.nacionalidad=nacionalidad
         self.fecha_nacimiento=fecha_nacimiento
         self.fecha_muerte=fecha_muerte
         self.tipo=tipo
         self.anio_creacion=anio_creacion
         self.imagen=imagen
-
-    def show_resumen(self):
-        print(f"    Id: {self.id} - Título: {self.titulo} (Artista: {self.autor})")
 
     def show_detalles(self):
         print(f"\nTítulo de la Obra: {self.titulo}\n"

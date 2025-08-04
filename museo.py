@@ -1,6 +1,6 @@
 from Departamento import Departamento
 # from Nacionalidad import Nacionalidad
-from Obra import Obra
+from Obra import Obra,ObraDetallada
 # from Artista import Artista
 import requests
 
@@ -41,7 +41,7 @@ class Museo:
                 for obra in obras["objectIDs"][:25]:
                     aux=requests.get("https://collectionapi.metmuseum.org/public/collection/v1/objects/" + str(obra))
                     aux=aux.json()
-                    self.obras.append(Obra(aux["objectID"],aux["title"],aux["artistDisplayName"],aux["artistNationality"],aux["artistBeginDate"],aux["artistEndDate"],aux["classification"],aux["objectDate"],aux["primaryImage"]))
+                    self.obras.append(Obra(aux["objectID"],aux["title"],aux["artistDisplayName"]))
                 for obra2 in self.obras:
                     obra2.show_resumen()
                 
