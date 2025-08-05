@@ -8,15 +8,9 @@ class Obra:
     Id de la obra. (int)
     Titulo o nombre de la obra. (string)
     Artista de la obra. (string)
-    Fecha de nacimiento del artista. (string)
-    Fecha de muerte del artista. (string)
-    Tipo o clasificación de la obra. (string)
-    Año de creacion (o período) de la obra. (string)
-    Imagen referencial de la obra. ()
 
     Métodos:
     El método show_resumen muestra al usuario la información primordial de la obra al buscar un departamento, nacionalidad o artista específico.
-    El método show_detalles muestra al usuario información más detallada de la obra al indicar un id a una obra específica.
     """
     def __init__(self,id,titulo,autor):
         self.id=id
@@ -27,7 +21,25 @@ class Obra:
         print(f"    Id: {self.id} - Título: {self.titulo} (Artista: {self.autor})")
 
 
-class ObraDetallada:
+class ObraDetallada(Obra):
+    """
+    Clase: Obra Detallada.
+
+    Objetivo: Ordenar la información detallada suministrada por la API de una obra.
+
+    La información requerida (atributos) es:
+    Id de la obra. (int)
+    Titulo o nombre de la obra. (string)
+    Artista de la obra. (string)
+    Fecha de nacimiento del artista. (string)
+    Fecha de muerte del artista. (string)
+    Tipo o clasificación de la obra. (string)
+    Año de creacion (o período) de la obra. (string)
+    Imagen referencial de la obra. ()
+
+    Métodos:
+    El método show_detalles muestra al usuario información más detallada de la obra al indicar un id a una obra específica.
+    """
     def __init__(self,id,titulo,autor,nacionalidad,fecha_nacimiento,fecha_muerte,tipo,anio_creacion,imagen):
         super().__init__(id,titulo,autor)
         self.nacionalidad=nacionalidad
