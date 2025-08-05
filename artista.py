@@ -18,7 +18,7 @@ class Artista:
       self.nacimiento = nacimiento
       self.muerte = muerte
 
-  def show_info(self):
+  def show(self):
       print(f"Nombre: {self.nombre}")
       print(f"Nacionalidad: {self.nacionalidad}")
       print(f"Nacimiento: {self.nacimiento}")
