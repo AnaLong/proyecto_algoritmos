@@ -1,7 +1,7 @@
 from Departamento import Departamento
 # from Nacionalidad import Nacionalidad
 from Obra import Obra,ObraDetallada
-# from Artista import Artista
+from artista import Artista
 import requests
 
 class Museo:
@@ -51,7 +51,7 @@ class Museo:
             elif menu=="2":
                 pass
             elif menu=="3":
-                pass
+                
             elif menu=="4":
                 print("\nHa salido del sistema\n")
                 break
