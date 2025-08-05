@@ -1,3 +1,5 @@
+from artista import Artista
+
 class Obra:
     """
     Clase: Obra.
@@ -24,7 +26,7 @@ class Obra:
         self.autor=autor
 
     def show_resumen(self):
-        print(f"    Id: {self.id} - Título: {self.titulo} (Artista: {self.autor.nombre})")
+        print(f"    Id: {self.id} - Título: {self.titulo} (Artista: {self.autor})")
 
 
 class ObraDetallada:
