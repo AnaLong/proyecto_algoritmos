@@ -1,3 +1,5 @@
+from artista import Artista
+
 class Obra:
     """
     Clase: Obra.
@@ -53,7 +55,7 @@ class ObraDetallada(Obra):
         print(f"\nTítulo de la Obra: {self.titulo}\n"
             f"Nombre del Artista: {self.autor} \n"
             f"Nacionalidad del Artista: {self.nacionalidad}\n"
-            f"Fecha de nacimiento del Artista: {self.fecha_nacimiento}\n"
-            f"Fecha de muerte del Artista: {self.fecha_muerte}\n"
+            f"Fecha de nacimiento del Artista: {self.autor}\n"
+            f"Fecha de muerte del Artista: {self.autor}\n"
             f"Clasificación de la Obra: {self.tipo}\n"
             f"Fecha de creación de la Obra: {self.anio_creacion}\n")
