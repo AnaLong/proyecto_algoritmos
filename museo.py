@@ -51,7 +51,33 @@ class Museo:
             elif menu=="2":
                 pass
             elif menu=="3":
-                
+                self.obras = []
+                nombre_autor = input("\nIngrese el nombre del autor que desea buscar: ")
+
+                api = f"https://collectionapi.metmuseum.org/public/collection/v1/search?artistOrCulture=true&q={nombre_autor}"
+                respuesta = requests.get(api)
+                datos = respuesta.json()
+
+                total = datos["total"]
+                if total == 0:
+                    print("\nNo se encontraron obras para ese artista.")
+                    continue
+
+                print(f"\nSe encontraron {total} obras. Se muestran las primeras 25:\n")
+
+                for obj_id in datos["objectIDs"][:25]:
+                    obra_req = requests.get(f"https://collectionapi.metmuseum.org/public/collection/v1/objects/{obj_id}")
+                    obra_json = obra_req.json()
+
+                    id_obra = obra_json.get("objectID", "Desconocido")
+                    titulo = obra_json.get("title", "Desconocido")
+                    autor = obra_json.get("artistDisplayName", "Desconocido")
+
+                    self.obras.append(Obra(id_obra, titulo, autor))
+
+                for obra in self.obras:
+                    obra.show_resumen()
+                    
             elif menu=="4":
                 print("\nHa salido del sistema\n")
                 break
