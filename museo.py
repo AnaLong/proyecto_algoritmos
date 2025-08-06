@@ -12,8 +12,13 @@ class Museo:
     Necesita las clases Obra, Departamento, Nacionalidad y Artista
 
     Métodos:
-    El método start inicia al usuario en un menú que permite escojer el método de búqueda de obras, despues ejecuta diferentes métodos dependiendo de la elección
-    El método cargar_datos recauda la información de los departamentos y nacionalidades disponibles y los almacena como listas de los respectivos tipos de objetos
+    El método start inicia al usuario en un menú que permite escojer el método de búsqueda de obras, despues ejecuta diferentes métodos dependiendo de la elección.
+    El método cargar_datos recauda la información de los departamentos y nacionalidades disponibles y los almacena como listas de los respectivos tipos de objetos.
+    El metodo busqueda_departamento permite al usuario seleccionar de la lista de departamentos disponibles, el departamento de su interes, para encontrar la obra requerida.
+    El metodo busqueda_por_autor permite al usuario buscar obras de un autor en especifico a traves de su nombre.
+    El metodo busqueda_nacionalidad presenta al usuario una lista de nacionalidades, y le permite buscar la obra de su interes a traves de la nacionalidad de su autor.
+    El metodo mostrar_obra_detallada permite al usuario acceder a informacion detallada de una obra seleccionada por su ID. (Se incluye dentro de los metodos de busqueda)
+    El metodo guardar_imagen_desde_url permite al usuario descargar una imagen de la obra en la que este interesado y la guarda en un archivo. (Se encuentra incluido dentro del metodo mostrar_obra_detallada)
     """
     
     def start(self):
@@ -246,9 +251,6 @@ class Museo:
                 print('Por favor ingrese un numero')
 
     def guardar_imagen_desde_url(self, url, nombre_archivo):
-        """
-        Descarga una imagen desde una URL y la guarda en un archivo.
-        """
         try:
             response = requests.get(url, stream=True)
             response.raise_for_status()
