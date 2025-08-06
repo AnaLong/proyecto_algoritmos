@@ -1,5 +1,5 @@
 from Departamento import Departamento
-# from Nacionalidad import Nacionalidad
+from Nacionalidad import Nacionalidad
 from Obra import Obra,ObraDetallada
 import requests
 from time import sleep
@@ -17,7 +17,9 @@ class Museo:
     """
     
     def start(self):
+        print('Cargando... Espere un momento.')
         self.cargar_datos()
+        print('\nCarga Finalizada!')
         while True:
             menu=input("\nBienvenido al Museo. Los siguientes son los métodos de búsqueda de obras disponibles:\n" \
             "\n1- Búsqueda por departamento\n" \
@@ -30,7 +32,7 @@ class Museo:
                 self.busqueda_departamento()
 
             elif menu=="2":
-                pass
+                self.busqueda_nacionalidad()
             elif menu=="3":
                 self.busqueda_por_autor()
                     
@@ -150,28 +152,98 @@ class Museo:
                 break
             else: 
                 print("\nPor favor seleccione una de las opciones anteriores\n")
+    
+    def busqueda_nacionalidad(self):
+        print('\nLista de nacionalidades en')
+        for nacionalidad in self.nacionalidades:
+            nacionalidad.show()
+
+        micro_menu=input('Escriba la nacionalidad la cual quiera buscar:\n---->')
+        micro_menu=micro_menu.replace(' ','20%')
+        micro_menu=micro_menu.lower()
+        api_n='https://collectionapi.metmuseum.org/public/collection/v1/search?artistOrCulture=true&q='+ micro_menu
+        obras=requests.get(api_n)
+        obras=obras.json() 
+        total=obras["total"]
+        self.obras=[]
+        muestreo= 25
+        contador= 1
+        if total>0:
+            if total<=muestreo:
+                muestreo=total
+            print(f'\nEl numero total de obras de la nacionalidad "{micro_menu}", es igual a {total}, se muestraran las primeras {muestreo}: \n')
+            while True:
+                inicio=(contador*muestreo)-muestreo
+                fin=contador*muestreo
+                if fin>=total:
+                    fin=total
+
+                for obra in obras["objectIDs"][inicio:fin]:
+                    for intento in range(3):
+                        aux=requests.get("https://collectionapi.metmuseum.org/public/collection/v1/objects/" + str(obra))
+                        if aux.status_code==200:
+                            try:
+                                datos=aux.json()
+                                self.obras.append(Obra(datos["objectID"],datos["title"],datos["artistDisplayName"]))
+                                break
+                            except ValueError: 
+                                print("Error")
+                                break
+                        else:
+                            print("\nNo se pudo conectar con la api")
+                            print('Espere un momento...')
+                            sleep(20)
+
+                for obra2 in self.obras[inicio:fin]:
+                    obra2.show_resumen()
+
+                eleccion=input("\n1- Ver las siguientes 25 obras.\n" \
+                "2- Seleccionar una obra en específico y ver su informacion detallada.\n" \
+                "3- Volver al menu principal\n"
+                "\n---> ")
+
+                if eleccion=="1":
+                    contador += 1
+
+                elif eleccion=="2":
+                    self.mostrar_obra_detallada()
+                    break
+
+                elif eleccion=="3":
+                    print("\nVolviendo al menu principal\n")
+                    break
+                else: 
+                    print("\nPor favor seleccione una de las opciones anteriores\n")
+                    continue 
+        else:
+            print(f'Elemento {micro_menu}, no obtuvo resultados.')
 
     def mostrar_obra_detallada(self):
         self.obra_detallada=[]
         eleccion=input("\n Ingrese el ID de la obra la cual desea ver sus detalles: ")
         aux=requests.get("https://collectionapi.metmuseum.org/public/collection/v1/objects/" + str(eleccion))
-        aux=aux.json()
-        self.obra_detallada.append(ObraDetallada(aux["objectID"],aux["title"],aux["artistDisplayName"],aux["artistNationality"],aux["artistBeginDate"],aux["artistEndDate"],aux["classification"],aux["objectDate"],aux["primaryImage"]))
-        for obra in self.obra_detallada:
-            obra.show_detalles()
-            if obra.imagen:
-                opcion_img = input("\n¿Desea ver y guardar la imagen de la obra? (s/n): ")
-                if opcion_img.lower() == "s":
-                    nombre_archivo = f"obra_{obra.id}"
-                    archivo_img = self.guardar_imagen_desde_url(obra.imagen, nombre_archivo)
-                    if archivo_img:
-                        try:
-                            img = Image.open(archivo_img)
-                            img.show()
-                        except Exception as e:
-                            print(f"Error al abrir la imagen: {e}")
+        if eleccion.isnumeric():
+            aux=aux.json()
+            if aux=={"message":"could not parse objectID"}:
+                print('error no existe esa id')
+            self.obra_detallada.append(ObraDetallada(aux["objectID"],aux["title"],aux["artistDisplayName"],aux["artistNationality"],aux["artistBeginDate"],aux["artistEndDate"],aux["classification"],aux["objectDate"],aux["primaryImage"]))
+            for obra in self.obra_detallada:
+                obra.show_detalles()
+                if obra.imagen:
+                    opcion_img = input("\n¿Desea ver y guardar la imagen de la obra? (s/n): ")
+                    if opcion_img.lower() == "s":
+                        nombre_archivo = f"obra_{obra.id}"
+                        archivo_img = self.guardar_imagen_desde_url(obra.imagen, nombre_archivo)
+                        if archivo_img:
+                            try:
+                                img = Image.open(archivo_img)
+                                img.show()
+                            except Exception as e:
+                                print(f"Error al abrir la imagen: {e}")
+                else:
+                    print("No hay imagen disponible para esta obra.")
             else:
-                print("No hay imagen disponible para esta obra.")
+                print('Por favor ingrese un numero')
 
     def guardar_imagen_desde_url(self, url, nombre_archivo):
         """
@@ -206,8 +278,22 @@ class Museo:
         dep_dic=dep_dic.json()
         obras_dic=requests.get("https://collectionapi.metmuseum.org/public/collection/v1/objects")
         obras_dic=obras_dic.json()
+
+        archivo=open("CH_Nationality_List_20171130_v1.csv","r")
+        lista_provisional=list(archivo)
+        lista_provisional.remove("Nationality\n")
+        lista_nac=[]
+        for i in lista_provisional:
+            i=i.replace('\n','')
+            lista_nac.append(i)
+        archivo.close()
+
     
         self.departamentos=[]
+        self.nacionalidades=[]
 
         for departamento in dep_dic["departments"]:
             self.departamentos.append(Departamento(departamento["departmentId"],departamento["displayName"]))
+        
+        for nacionalidad in lista_nac:
+            self.nacionalidades.append(Nacionalidad(nacionalidad))
