@@ -1,5 +1,3 @@
-from artista import Artista
-
 class Obra:
     """
     Clase: Obra.
