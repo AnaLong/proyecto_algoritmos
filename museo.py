@@ -3,6 +3,7 @@ from Departamento import Departamento
 from Obra import Obra,ObraDetallada
 import requests
 from time import sleep
+from PIL import Image
 
 class Museo:
     """
@@ -158,6 +159,47 @@ class Museo:
         self.obra_detallada.append(ObraDetallada(aux["objectID"],aux["title"],aux["artistDisplayName"],aux["artistNationality"],aux["artistBeginDate"],aux["artistEndDate"],aux["classification"],aux["objectDate"],aux["primaryImage"]))
         for obra in self.obra_detallada:
             obra.show_detalles()
+            if obra.imagen:
+                opcion_img = input("\n¿Desea ver y guardar la imagen de la obra? (s/n): ")
+                if opcion_img.lower() == "s":
+                    nombre_archivo = f"obra_{obra.id}"
+                    archivo_img = self.guardar_imagen_desde_url(obra.imagen, nombre_archivo)
+                    if archivo_img:
+                        try:
+                            img = Image.open(archivo_img)
+                            img.show()
+                        except Exception as e:
+                            print(f"Error al abrir la imagen: {e}")
+            else:
+                print("No hay imagen disponible para esta obra.")
+
+    def guardar_imagen_desde_url(self, url, nombre_archivo):
+        """
+        Descarga una imagen desde una URL y la guarda en un archivo.
+        """
+        try:
+            response = requests.get(url, stream=True)
+            response.raise_for_status()
+            content_type = response.headers.get('Content-Type')
+            extension = '.png'
+            if content_type:
+                if 'image/png' in content_type:
+                    extension = '.png'
+                elif 'image/jpeg' in content_type:
+                    extension = '.jpg'
+                elif 'image/svg+xml' in content_type:
+                    extension = '.svg'
+            nombre_archivo_final = f"{nombre_archivo}{extension}"
+            with open(nombre_archivo_final, 'wb') as file:
+                for chunk in response.iter_content(chunk_size=8192):
+                    file.write(chunk)
+            print(f"Imagen guardada exitosamente como '{nombre_archivo_final}'")
+            return nombre_archivo_final
+        except requests.exceptions.RequestException as e:
+            print(f"Error al hacer el request: {e}")
+        except IOError as e:
+            print(f"Error al escribir el archivo: {e}")
+        return None
 
     def cargar_datos(self):
         dep_dic=requests.get("https://collectionapi.metmuseum.org/public/collection/v1/departments")
