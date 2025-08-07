@@ -18,7 +18,7 @@ class Obra:
         self.autor=autor
 
     def show_resumen(self):
-        print(f"    Id: {self.id} - Título: {self.titulo} (Artista: {self.autor})")
+        print(f"    Id: {self.id} - Título: {self.titulo if self.titulo else 'Desconocido'} (Artista: {self.autor if self.autor else 'Desconocido'})")
 
 
 class ObraDetallada(Obra):
@@ -50,10 +50,10 @@ class ObraDetallada(Obra):
         self.imagen=imagen
 
     def show_detalles(self):
-        print(f"\nTítulo de la Obra: {self.titulo}\n"
-            f"Nombre del Artista: {self.autor} \n"
-            f"Nacionalidad del Artista: {self.nacionalidad}\n"
-            f"Fecha de nacimiento del Artista: {self.fecha_nacimiento}\n"
-            f"Fecha de muerte del Artista: {self.fecha_muerte}\n"
-            f"Clasificación de la Obra: {self.tipo}\n"
-            f"Fecha de creación de la Obra: {self.anio_creacion}\n")
+        print(f"\nTítulo de la Obra: {self.titulo if self.titulo else 'Desconocido'}\n"
+            f"Nombre del Artista: {self.autor if self.autor else 'Desconocido'} \n"
+            f"Nacionalidad del Artista: {self.nacionalidad if self.nacionalidad else 'Desconocido'}\n"
+            f"Fecha de nacimiento del Artista: {self.fecha_nacimiento if self.fecha_nacimiento else 'Desconocido'}\n"
+            f"Fecha de muerte del Artista: {self.fecha_muerte if self.fecha_muerte else 'Desconocido'}\n"
+            f"Clasificación de la Obra: {self.tipo if self.tipo else 'Desconocido'}\n"
+            f"Fecha de creación de la Obra: {self.anio_creacion if self.anio_creacion else 'Desconocido'}\n")
