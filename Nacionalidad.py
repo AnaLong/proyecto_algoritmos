@@ -3,4 +3,4 @@ class Nacionalidad:
         self.nombre=nombre
     
     def show(self):
-        print(f'- " {self.nombre}')
+        print(f'- {self.nombre}')

@@ -9,7 +9,7 @@ class Museo:
     """
     Clase: Museo
 
-    Necesita las clases Obra, Departamento, Nacionalidad y Artista
+    Necesita las clases Obra, Departamento y Nacionalidad
 
     Métodos:
     El método start inicia al usuario en un menú que permite escojer el método de búsqueda de obras, despues ejecuta diferentes métodos dependiendo de la elección.
@@ -51,6 +51,8 @@ class Museo:
     def busqueda_por_autor(self):
         self.obras = []
         nombre_autor = input("\nIngrese el nombre del autor que desea buscar: ")
+        nombre_autor = nombre_autor.split()
+        nombre_autor = " ".join(nombre_autor)
 
         api = f"https://collectionapi.metmuseum.org/public/collection/v1/search?artistOrCulture=true&q={nombre_autor}"
         respuesta = requests.get(api)
@@ -58,7 +60,7 @@ class Museo:
 
         total = datos["total"]
         if total == 0:
-            print("\nNo se encontraron obras para ese artista.")
+            print(f"\nNo se encontraron obras para el artista ({nombre_autor}).")
             return
 
         print(f"\nSe encontraron {total} obras. Se muestran las primeras 25:\n")
@@ -112,51 +114,59 @@ class Museo:
             departamento.show_lista()
 
         menu2=input("\nIndique el id del departamento que en el cual desea buscar: ")
-        api= "https://collectionapi.metmuseum.org/public/collection/v1/search?departmentId=" + menu2 + "&q=%22%22"
-        obras=requests.get(api)
-        obras=obras.json()
-        total=obras["total"]
-        muestreo= 25
-        contador= 1
-        print(f"\nEl total de obras del departamento es {total}, se muestran las primeras {muestreo}: \n")
-        while True:
-            inicio=(contador*muestreo)-muestreo
-            fin=contador*muestreo
-            for obra in obras["objectIDs"][inicio:fin]:
-                for intento in range(3):
-                    aux=requests.get("https://collectionapi.metmuseum.org/public/collection/v1/objects/" + str(obra))
-                    if aux.status_code==200:
-                        try:
-                            datos=aux.json()
-                            self.obras.append(Obra(datos["objectID"],datos["title"],datos["artistDisplayName"]))
-                            break
-                        except ValueError: 
-                            print("Error")
-                            break
-                    else:
-                        print("\nNo se pudo conectar con la api. Reintentando...")
-                        sleep(20)
+        if not menu2.isnumeric(): 
+            print('\n Por favor ingrese un numero entero.')
+        else:
+            menu2=int(menu2)
+            if menu2<= 0 or menu2== 2 or menu2== 20 or menu2>= 21:
+                print('\nDepartamento inexistente, por favor ingrese un id preteneciente a un departamento.')
+            else:
+                api= "https://collectionapi.metmuseum.org/public/collection/v1/search?departmentId=" + str(menu2) + "&q=%22%22"
+                obras=requests.get(api)
+                obras=obras.json()
+                total=obras["total"]
+                muestreo= 25
+                contador= 1
+                print(f"\nEl total de obras del departamento es {total}, se muestran las primeras {muestreo}: \n")
+                while True:
+                    inicio=(contador*muestreo)-muestreo
+                    fin=contador*muestreo
+                    for obra in obras["objectIDs"][inicio:fin]:
+                        for intento in range(3):
+                            aux=requests.get("https://collectionapi.metmuseum.org/public/collection/v1/objects/" + str(obra))
+                            if aux.status_code==200:
+                                try:
+                                    datos=aux.json()
+                                    self.obras.append(Obra(datos["objectID"],datos["title"],datos["artistDisplayName"]))
+                                    break
+                                except ValueError: 
+                                    print("Error")
+                                    break
+                            else:
+                                print("\nNo se pudo conectar con la api. Reintentando...")
+                                sleep(20)
 
-            for obra2 in self.obras[inicio:fin]:
-                obra2.show_resumen()
+                    for obra2 in self.obras[inicio:fin]:
+                        obra2.show_resumen()
 
-            eleccion=input("\n1- Ver las siguientes 25 obras.\n" \
-            "2- Seleccionar una obra en específico y ver su informacion detallada.\n" \
-            "3- Volver al menu principal\n"
-            "\n---> ")
+                    eleccion=input("\n1- Ver las siguientes 25 obras.\n" \
+                    "2- Seleccionar una obra en específico y ver su informacion detallada.\n" \
+                    "3- Volver al menu principal\n"
+                    "\n---> ")
 
-            if eleccion=="1":
-                contador += 1
+                    if eleccion=="1":
+                        contador += 1
 
-            elif eleccion=="2":
-                self.mostrar_obra_detallada()
-                break
+                    elif eleccion=="2":
+                        self.mostrar_obra_detallada()
+                        break
 
-            elif eleccion=="3":
-                print("\nVolviendo al menu principal\n")
-                break
-            else: 
-                print("\nPor favor seleccione una de las opciones anteriores\n")
+                    elif eleccion=="3":
+                        print("\nVolviendo al menu principal\n")
+                        break
+
+                    else: 
+                        print("\nPor favor seleccione una de las opciones anteriores\n")
     
     def busqueda_nacionalidad(self):
         print('\nLista de nacionalidades en')
@@ -164,6 +174,9 @@ class Museo:
             nacionalidad.show()
 
         micro_menu=input('Escriba la nacionalidad la cual quiera buscar:\n---->')
+        seleccion_textual=micro_menu
+        micro_menu=micro_menu.split()
+        micro_menu=" ".join(micro_menu)
         micro_menu=micro_menu.replace(' ','20%')
         micro_menu=micro_menu.lower()
         api_n='https://collectionapi.metmuseum.org/public/collection/v1/search?artistOrCulture=true&q='+ micro_menu
@@ -171,17 +184,22 @@ class Museo:
         obras=obras.json() 
         total=obras["total"]
         self.obras=[]
+
         muestreo= 25
         contador= 1
+
         if total>0:
             if total<=muestreo:
                 muestreo=total
-            print(f'\nEl numero total de obras de la nacionalidad "{micro_menu}", es igual a {total}, se muestraran las primeras {muestreo}: \n')
+
+            print(f'\nEl numero total de obras de la nacionalidad "{seleccion_textual}", es igual a {total}, se muestraran las primeras {muestreo}: \n')
+
             while True:
                 inicio=(contador*muestreo)-muestreo
                 fin=contador*muestreo
                 if fin>=total:
                     fin=total
+                    muestreo=total
 
                 for obra in obras["objectIDs"][inicio:fin]:
                     for intento in range(3):
@@ -217,11 +235,13 @@ class Museo:
                 elif eleccion=="3":
                     print("\nVolviendo al menu principal\n")
                     break
+
                 else: 
                     print("\nPor favor seleccione una de las opciones anteriores\n")
                     continue 
         else:
-            print(f'Elemento {micro_menu}, no obtuvo resultados.')
+            
+            print(f'Elemento {seleccion_textual}, no obtuvo resultados.')
 
     def mostrar_obra_detallada(self):
         self.obra_detallada=[]

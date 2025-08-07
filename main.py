@@ -1,4 +1,4 @@
-from museo import Museo
+from Museo import Museo
 
 def main():
     """
