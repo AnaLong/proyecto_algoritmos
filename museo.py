@@ -32,7 +32,7 @@ class Museo:
         self.cargar_datos()
         print('\nCarga Finalizada!\n')
         while True:
-            menu=input("\nBienvenido al Museo. Los siguientes son los métodos de búsqueda de obras disponibles:\n" \
+            menu=input("\nBienvenido al Museo. Seleccione uno de los siguientes son los métodos de búsqueda de obras disponibles:\n" \
             "\n1- Búsqueda por departamento\n" \
             "2- Búsqueda por Nacionalidad del artista\n" \
             "3- Búsqueda por Nombre del Artista\n" \
@@ -67,6 +67,7 @@ class Museo:
 
         total = datos["total"]
         muestreo=25
+        
         if total == 0:
             print(f"\nNo se encontraron obras para el artista ({nombre_autor}).")
             return
@@ -75,13 +76,14 @@ class Museo:
             self.muestreo_obras(datos,total,muestreo)
 
     def muestreo_obras(self,datos,total,muestreo):
-        print(f"\nSe encontraron {total} obras. Se muestran las primeras {muestreo}:\n")
+        print(f"\nSe encontraron {total} obras. Se muestran las primeras {muestreo}:")
 
         contador = 1
 
         while True:
             inicio = (contador * muestreo) - muestreo
             fin = contador * muestreo
+            print('\nCargando...')
 
             for obj_id in datos["objectIDs"][inicio:fin]:
                 for intento in range(3):
