@@ -34,7 +34,7 @@ class Museo:
         while True:
             menu=input("\nBienvenido al Museo. Seleccione uno de los siguientes son los métodos de búsqueda de obras disponibles:\n" \
             "\n1- Búsqueda por departamento\n" \
-            "2- Búsqueda por Nacionalidad del artista\n" \
+            "2- Búsqueda por Nacionalidad del Artista\n" \
             "3- Búsqueda por Nombre del Artista\n" \
             "4- Salir del sistema\n" \
             "\nIngrese el número asociado al método de búsqueda que desea utilizar: ")
@@ -67,13 +67,12 @@ class Museo:
 
         total = datos["total"]
         muestreo=25
-        
-        if total == 0:
-            print(f"\nNo se encontraron obras para el artista ({nombre_autor}).")
-            return
-
-        else: 
-            self.muestreo_obras(datos,total,muestreo)
+        if total>0:
+            if total<=muestreo:
+                muestreo=total
+                self.muestreo_obras(datos,total,muestreo)
+        else:  
+            print(f"\nNo se encontraron obras para el artista ({nombre_autor}).\n")
 
     def muestreo_obras(self,datos,total,muestreo):
         print(f"\nSe encontraron {total} obras. Se muestran las primeras {muestreo}:")
@@ -115,7 +114,7 @@ class Museo:
                 self.mostrar_obra_detallada()
                 break
             elif eleccion == "3":
-                print("\nVolviendo al menu principal\n")
+                print("\nVolviendo al menú principal\n")
                 break
             else:
                 print("\nPor favor seleccione una de las opciones anteriores\n")
