@@ -173,8 +173,8 @@ class Museo:
         aux=requests.get("https://collectionapi.metmuseum.org/public/collection/v1/objects/" + str(eleccion))
         if eleccion.isnumeric():
             aux=aux.json()
-            if aux=={"message":"could not parse objectID"}:
-                print('error no existe esa id')
+            if aux=={"message":"could not parse objectID"} or {"message":"ObjectID not found"}:
+                print('\nError: No existe ese ID\n')
             else:
                 self.obra_detallada.append(ObraDetallada(aux["objectID"],aux["title"],aux["artistDisplayName"],aux["artistNationality"],aux["artistBeginDate"],aux["artistEndDate"],aux["classification"],aux["objectDate"],aux["primaryImage"]))
                 for obra in self.obra_detallada:
